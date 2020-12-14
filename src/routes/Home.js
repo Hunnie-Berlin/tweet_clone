@@ -8,18 +8,21 @@ const Home = ({ userObj }) => {
   const [tweets, setTweets] = useState([]);
   const [imgPath, setImgPath] = useState(null);
   useEffect(() => {
-    dbService.collection("tweets").onSnapshot((snapshot) => {
-      const twArr = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setTweets(twArr);
-    });
+    dbService
+      .collection("tweets")
+      .orderBy("createdAt", "desc")
+      .onSnapshot((snapshot) => {
+        const twArr = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTweets(twArr);
+      });
   }, []);
   const onSubmit = async (e) => {
     e.preventDefault();
     let imgUrl = "";
-    if (imgPath || imgPath !== "") {
+    if (imgPath) {
       const fileRef = storageService
         .ref()
         .child(`${userObj.email}/${uuidv4()}`);
@@ -34,7 +37,9 @@ const Home = ({ userObj }) => {
     };
     await dbService.collection("tweets").add(tweetObj);
     setTweet("");
-    setImgPath(null);
+    if (imgPath) {
+      setImgPath(null);
+    }
   };
   const onChange = ({ target: { value } }) => {
     setTweet(value);

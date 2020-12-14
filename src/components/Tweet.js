@@ -1,4 +1,4 @@
-import { dbService } from "myFirebase";
+import { dbService, storageService } from "myFirebase";
 import React, { useState } from "react";
 
 const Tweet = ({ twObj, isOwner }) => {
@@ -8,6 +8,8 @@ const Tweet = ({ twObj, isOwner }) => {
     const ok = window.confirm("Are you sure to delete?");
     if (ok) {
       await dbService.doc(`tweets/${twObj.id}`).delete();
+      twObj.imgUrl !== "" &&
+        (await storageService.refFromURL(twObj.imgUrl).delete());
     }
   };
   const toggleEditing = () => setEditing((prev) => !prev);
