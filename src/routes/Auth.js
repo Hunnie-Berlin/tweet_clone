@@ -30,9 +30,7 @@ const Auth = () => {
       } else {
         data = await authService.signInWithEmailAndPassword(email, password);
       }
-      console.log(data);
     } catch (error) {
-      console.log(error);
       setError(error.message);
     } finally {
       setLoginMethod("email");
@@ -51,9 +49,7 @@ const Auth = () => {
         provider = new firebaseInstance.auth.GithubAuthProvider();
       }
       const data = await authService.signInWithPopup(provider);
-      console.log(data);
     } catch (error) {
-      console.log(error);
       setError(error.message);
     } finally {
       setLoginMethod("social");
