@@ -1,11 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { HashRouter, Route, Switch } from "react-router-dom";
-import Auth from "../routes/Auth";
-import Home from "../routes/Home";
+import Auth from "routes/Auth";
+import Home from "routes/Home";
 
-const Router = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  !isLoggedIn && setIsLoggedIn(true);
+const Router = ({ isLoggedIn }) => {
   return (
     <HashRouter>
       <Switch>
