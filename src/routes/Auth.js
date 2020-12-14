@@ -5,6 +5,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isNewAccount, setIsNewAccount] = useState(true);
+  const [loginMethod, setLoginMethod] = useState("");
   const [error, setError] = useState("");
 
   const onChange = (e) => {
@@ -31,7 +32,10 @@ const Auth = () => {
       }
       console.log(data);
     } catch (error) {
+      console.log(error);
       setError(error.message);
+    } finally {
+      setLoginMethod("email");
     }
   };
   const toggleAccount = () => {
@@ -39,14 +43,21 @@ const Auth = () => {
   };
 
   const onSocialClick = async ({ target: { name } }) => {
-    let provider;
-    if (name === "google") {
-      provider = new firebaseInstance.auth.GoogleAuthProvider();
-    } else if (name === "github") {
-      provider = new firebaseInstance.auth.GithubAuthProvider();
+    try {
+      let provider;
+      if (name === "google") {
+        provider = new firebaseInstance.auth.GoogleAuthProvider();
+      } else if (name === "github") {
+        provider = new firebaseInstance.auth.GithubAuthProvider();
+      }
+      const data = await authService.signInWithPopup(provider);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    } finally {
+      setLoginMethod("social");
     }
-    const data = await authService.signInWithPopup(provider);
-    console.log(data);
   };
   return (
     <div>
@@ -71,7 +82,7 @@ const Auth = () => {
           type="submit"
           value={isNewAccount ? "Create Account" : "LOGIN"}
         />
-        {error}
+        {loginMethod === "email" && error}
         <div onClick={toggleAccount}>
           {isNewAccount ? " wanna Login" : "wanna Create Account"}
         </div>
@@ -83,6 +94,7 @@ const Auth = () => {
         <button name="github" onClick={onSocialClick}>
           Continue with Github
         </button>
+        {loginMethod === "social" && error}
       </div>
     </div>
   );
