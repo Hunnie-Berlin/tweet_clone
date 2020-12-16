@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Router from "components/Router";
 import { authService } from "myFirebase";
+import Globalstyle from "components/GlobalStyle";
+import Loading from "./Loading";
 
 const App = () => {
   const [isInit, setIsInit] = useState(false);
@@ -17,6 +19,7 @@ const App = () => {
         });
       } else {
         setIsLoggedIn(false);
+        setUserObj(null);
       }
       setIsInit(true);
     });
@@ -31,6 +34,7 @@ const App = () => {
   };
   return (
     <div>
+      <Globalstyle />
       {isInit ? (
         <Router
           isLoggedIn={isLoggedIn}
@@ -38,9 +42,8 @@ const App = () => {
           refreshUser={refreshUser}
         />
       ) : (
-        "Loading.."
+        <Loading />
       )}
-      <footer>&copy; Bible-Tweet {new Date().getFullYear()}</footer>
     </div>
   );
 };
